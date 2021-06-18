@@ -1,14 +1,16 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import Page from '../types/Page';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
   @Input() title = '';
 
-  constructor() {}
-
-  ngOnInit(): void {}
+  pages: Page[] = [
+    { path: 'process', title: 'Process' },
+    { path: 'setup', title: 'Setup' },
+  ];
 }

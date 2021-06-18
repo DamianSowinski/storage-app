@@ -1,0 +1,14 @@
+<section>
+  <ul class="list-inline m-0">
+    <li class="list-inline-item" *ngFor="let page of pages">
+      <a class="btn"
+         [routerLink]="page.path" routerLinkActive #rla="routerLinkActive"
+         [ngClass]="{ 'btn-light': !rla.isActive, 'btn-primary': rla.isActive}"
+         title="Go to setup page">{{page.title}}</a>
+    </li>
+  </ul>
+</section>
+
+<section class="m-4">
+  <router-outlet></router-outlet>
+</section>
