@@ -17,7 +17,6 @@ describe('HeaderComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
-    component.title = 'App title';
     fixture.detectChanges();
   });
 
@@ -26,7 +25,9 @@ describe('HeaderComponent', () => {
   });
 
   it('should have display title', () => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    expect(fixture.debugElement.query(By.css('.navbar-brand')).nativeElement.innerText).toEqual('App title');
+    component.title = 'App title';
+    fixture.detectChanges();
+    const title = fixture.debugElement.query(By.css('.navbar-brand')).nativeElement as HTMLHeadingElement;
+    expect(title.innerText).toEqual('App title');
   });
 });

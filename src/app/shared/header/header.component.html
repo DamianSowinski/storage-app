@@ -1,4 +1,4 @@
-<header class="navbar navbar-light bg-light p-2 shadow-sm">
+<header class="navbar navbar-light bg-light shadow-sm">
   <nav class="flex-grow-1">
     <ul class="list-inline m-0">
       <li class="list-inline-item" *ngFor="let page of pages">
@@ -10,5 +10,7 @@
     </ul>
   </nav>
 
-  <a class="navbar-brand" routerLink="/" title="Go to home page">{{title}}</a>
+  <h1 class="m-0 d-flex">
+    <a class="navbar-brand m-0" routerLink="/" title="Go to home page">{{title}}</a>
+  </h1>
 </header>

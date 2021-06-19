@@ -7,15 +7,15 @@ import { SetupComponent } from './setup.component';
 const routes: Routes = [
   {
     path: 'setup',
-    redirectTo: 'setup/containers',
+    redirectTo: 'setup/samples',
     pathMatch: 'full',
   },
   {
     path: 'setup',
     component: SetupComponent,
     children: [
-      { path: 'containers', component: ContainersComponent },
       { path: 'samples', component: SamplesComponent },
+      { path: 'containers', component: ContainersComponent },
     ],
   },
 ];

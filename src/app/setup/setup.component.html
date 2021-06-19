@@ -1,4 +1,6 @@
 <section>
+  <h2 class="sr-only">{{title}}</h2>
+
   <ul class="list-inline m-0">
     <li class="list-inline-item" *ngFor="let page of pages">
       <a class="btn"
@@ -9,6 +11,6 @@
   </ul>
 </section>
 
-<section class="m-4">
+<section class="m-4 mt-5">
   <router-outlet></router-outlet>
 </section>

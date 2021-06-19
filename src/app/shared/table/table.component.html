@@ -1,0 +1,22 @@
+<table class="table table-hover">
+  <thead>
+  <tr>
+    <th class="table__head" *ngFor="let column of columns">{{ column }}</th>
+  </tr>
+  </thead>
+
+  <tbody *ngIf="isValidData; else invalidMessage">
+  <tr *ngFor="let dataRow of data">
+    <td *ngFor="let item of dataRow">{{ item }}</td>
+  </tr>
+
+  </tbody>
+</table>
+
+<ng-template #invalidMessage>
+  <tr>
+    <td class="alert alert-warning text-center" role="alert" [colSpan]="columns.length">Invalid data</td>
+  </tr>
+</ng-template>
+
+

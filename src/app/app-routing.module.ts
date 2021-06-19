@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'setup/containers',
+    redirectTo: 'setup/samples',
     pathMatch: 'full',
   },
 ];

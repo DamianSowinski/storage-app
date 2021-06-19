@@ -7,8 +7,9 @@ import Page from '../shared/types/Page';
   styleUrls: ['./setup.component.scss'],
 })
 export class SetupComponent {
+  title = 'Setup';
   pages: Page[] = [
-    { path: 'containers', title: 'Containers' },
     { path: 'samples', title: 'Samples' },
+    { path: 'containers', title: 'Containers' },
   ];
 }

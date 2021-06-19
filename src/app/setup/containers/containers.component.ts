@@ -5,4 +5,11 @@ import { Component } from '@angular/core';
   templateUrl: './containers.component.html',
   styleUrls: ['./containers.component.scss'],
 })
-export class ContainersComponent {}
+export class ContainersComponent {
+  title = 'Containers';
+  tableColumns = ['Name', 'Rows', 'Columns'];
+  tableData = [
+    [1, 'a', 'b'],
+    [2, 'c', 'd'],
+  ];
+}
