@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { StorageService } from '../../storage.service';
 
 @Component({
   selector: 'app-samples',
@@ -8,8 +9,16 @@ import { Component } from '@angular/core';
 export class SamplesComponent {
   title = 'Samples';
   tableColumns = ['Number', 'Type', 'Volume'];
-  tableData = [
-    [1, 'a', 'b'],
-    [2, 'c', 'd'],
-  ];
+  tableData: (number | string)[][] = [];
+
+  constructor(private storageService: StorageService) {
+    this.fillTableData();
+  }
+
+  private fillTableData(): void {
+    this.storageService.getSamples().forEach((item) => {
+      const { number, type, volume } = item;
+      this.tableData.push([number, type, volume]);
+    });
+  }
 }

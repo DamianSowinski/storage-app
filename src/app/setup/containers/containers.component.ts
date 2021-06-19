@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { StorageService } from '../../storage.service';
 
 @Component({
   selector: 'app-containers',
@@ -8,8 +9,16 @@ import { Component } from '@angular/core';
 export class ContainersComponent {
   title = 'Containers';
   tableColumns = ['Name', 'Rows', 'Columns'];
-  tableData = [
-    [1, 'a', 'b'],
-    [2, 'c', 'd'],
-  ];
+  tableData: (number | string)[][] = [];
+
+  constructor(private storageService: StorageService) {
+    this.fillTableData();
+  }
+
+  private fillTableData(): void {
+    this.storageService.getContainers().forEach((item) => {
+      const { name, rows, columns } = item;
+      this.tableData.push([name, rows, columns]);
+    });
+  }
 }

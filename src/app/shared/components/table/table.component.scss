@@ -1,0 +1,9 @@
+@import '../../../../../node_modules/bootstrap/scss/functions';
+@import '../../../../../node_modules/bootstrap/scss/variables';
+
+.table {
+  &__head {
+    border-top: unset;
+    border-color: $gray-500;
+  }
+}
