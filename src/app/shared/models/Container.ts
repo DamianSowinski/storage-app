@@ -27,6 +27,15 @@ class Container {
 
   addSample(sample: Sample, row: number, column: number): void {
     this.samples[row][column] = sample;
+    sample.container = this;
+  }
+
+  getSample(row: number, column: number): Sample | undefined {
+    return this.samples[row][column];
+  }
+
+  getSamples(): (Sample | undefined)[][] {
+    return this.samples;
   }
 
   private initSamplesMatrix() {
