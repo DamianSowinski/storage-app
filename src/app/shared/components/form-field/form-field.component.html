@@ -1,0 +1,19 @@
+<div class="form-group"
+     [class.is-invalid]="isInvalid()"
+     [attr.aria-invalid]="isInvalid() ? 'true' : null"
+     [attr.aria-describedby]="feedbackId ? feedbackId : null">
+
+  <ng-content select="label"></ng-content>
+  <ng-content select="input"></ng-content>
+  <ng-content select="textarea"></ng-content>
+
+  <p class="invalid-feedback d-flex align-items-center"
+     *ngIf="isInvalid()"
+     [id]="feedbackId ? feedbackId : null">
+    <app-ico name="exclamation" aria-hidden="true"></app-ico>
+    <span class="ml-1">{{errorMessage}}</span>
+  </p>
+</div>
+
+
+

@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { BehaviorSubject } from 'rxjs';
 import Container from '../../shared/models/Container';
 import { StorageService } from '../../storage.service';
 import { ContainersComponent } from './containers.component';
@@ -12,6 +14,7 @@ describe('ContainersComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ContainersComponent],
+      imports: [ReactiveFormsModule],
       providers: [
         {
           provide: StorageService,
@@ -24,7 +27,7 @@ describe('ContainersComponent', () => {
   });
 
   beforeEach(() => {
-    storageService.getContainers.and.returnValue(new Map<string, Container>());
+    storageService.getContainers.and.returnValue(new BehaviorSubject(new Map<string, Container>()));
 
     fixture = TestBed.createComponent(ContainersComponent);
     component = fixture.componentInstance;

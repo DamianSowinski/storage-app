@@ -1,0 +1,20 @@
+::ng-deep.form-group {
+
+  &.is-invalid {
+    .form-control {
+      border-color: var(--red);
+
+      &:focus {
+        box-shadow: 0 0 0 2px var(--red);
+      }
+    }
+
+    .invalid-feedback {
+      .o-ico {
+        width: 12px;
+        height: 12px;
+        fill: var(--red);
+      }
+    }
+  }
+}

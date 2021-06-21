@@ -1,7 +1,7 @@
 import Container from './Container';
 import Sample from './Sample';
 
-fdescribe('Container', () => {
+describe('Container', () => {
   it('should create an instance', () => {
     expect(new Container('Box', 2, 2)).toBeTruthy();
   });

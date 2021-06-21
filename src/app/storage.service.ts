@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import Container from './shared/models/Container';
 import Sample from './shared/models/Sample';
 
@@ -9,18 +10,23 @@ export class StorageService {
   private readonly samples: Map<string, Sample>;
   private readonly containers: Map<string, Container>;
 
+  private readonly samplesSubject: BehaviorSubject<Map<string, Sample>>;
+  private readonly containerSubject: BehaviorSubject<Map<string, Container>>;
+
   constructor() {
     this.samples = new Map<string, Sample>();
     this.containers = new Map<string, Container>();
+    this.samplesSubject = new BehaviorSubject(this.samples);
+    this.containerSubject = new BehaviorSubject(this.containers);
     this.fillWithSampleData();
   }
 
-  getSamples(): Map<string, Sample> {
-    return this.samples;
+  getSamples(): BehaviorSubject<Map<string, Sample>> {
+    return this.samplesSubject;
   }
 
-  getContainers(): Map<string, Container> {
-    return this.containers;
+  getContainers(): BehaviorSubject<Map<string, Container>> {
+    return this.containerSubject;
   }
 
   addSample(sample: Sample): boolean {
@@ -29,6 +35,7 @@ export class StorageService {
     }
 
     this.samples.set(sample.number, sample);
+    this.samplesSubject.next(this.samples);
     return true;
   }
 
@@ -38,6 +45,7 @@ export class StorageService {
     }
 
     this.containers.set(container.name, container);
+    this.containerSubject.next(this.containers);
     return true;
   }
 
