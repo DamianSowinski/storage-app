@@ -12,7 +12,7 @@
 
       <app-form-field [form]="form.get('type')" feedbackId="typeFeedback">
         <label for="type">Type</label>
-        <input class="form-control" id="type" formControlName="type">
+        <input class="form-control" id="type" formControlName="type" list="types-helper" >
       </app-form-field>
 
       <app-form-field [form]="form.get('volume')" feedbackId="volumeFeedback">
@@ -29,3 +29,7 @@
 </app-modal>
 
 <app-fab (clickEvent)="addSample()"></app-fab>
+
+<datalist id="types-helper">
+  <option *ngFor="let type of typesHelper" value="{{type}}">
+</datalist>

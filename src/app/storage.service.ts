@@ -34,7 +34,7 @@ export class StorageService {
       return false;
     }
 
-    this.samples.set(sample.number, sample);
+    this.samples.set(sample.number.toLowerCase(), sample);
     this.samplesSubject.next(this.samples);
     return true;
   }
@@ -44,17 +44,17 @@ export class StorageService {
       return false;
     }
 
-    this.containers.set(container.name, container);
+    this.containers.set(container.name.toLowerCase(), container);
     this.containerSubject.next(this.containers);
     return true;
   }
 
   checkSampleExist(sample: Sample): boolean {
-    return this.samples.has(sample.number);
+    return this.samples.has(sample.number.toLowerCase());
   }
 
   checkContainerExist(container: Container): boolean {
-    return this.containers.has(container.name);
+    return this.containers.has(container.name.toLowerCase());
   }
 
   private fillWithSampleData(): void {

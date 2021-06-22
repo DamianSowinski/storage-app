@@ -2,6 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import Sample from '../../shared/models/Sample';
+import { ValidateUnique } from '../../shared/validators/unique.validator';
 import { StorageService } from '../../storage.service';
 
 declare const $: any;
@@ -17,9 +18,13 @@ export class SamplesComponent implements OnDestroy {
   tableData: (number | string)[][] = [];
   form: FormGroup;
   samplesSubscription: Subscription;
+  typesHelper: Set<string> = new Set([]);
 
   constructor(private storageService: StorageService, private formBuilder: FormBuilder) {
-    this.samplesSubscription = this.storageService.getSamples().subscribe((samples) => this.fillTableData(samples));
+    this.samplesSubscription = this.storageService.getSamples().subscribe((samples) => {
+      this.fillTableData(samples);
+      this.fillTypesHelepr(samples);
+    });
     this.form = this.createForm();
   }
 
@@ -53,12 +58,19 @@ export class SamplesComponent implements OnDestroy {
   }
 
   private createForm(): FormGroup {
-    const { required, minLength } = Validators;
+    const { required, minLength, pattern } = Validators;
+    const samples = this.storageService.getSamples().value;
 
     return this.formBuilder.group({
-      number: ['', { validators: [required, minLength(3)] }],
-      type: ['', { validators: [required, minLength(3)] }],
-      volume: ['', { validators: [required, minLength(3)] }],
+      number: ['', { validators: [required, minLength(1), ValidateUnique(samples)] }],
+      type: ['', { validators: [required, minLength(1)] }],
+      volume: ['', { validators: [required, pattern('^[0-9]+((,|.)?[0-9]+)?(l|ml|µl|nl|pl){1}$')] }],
     });
+  }
+
+  private fillTypesHelepr(samples: Map<string, Sample>) {
+    const tmpArray: string[] = [];
+    samples.forEach((sample) => tmpArray.push(sample.type));
+    this.typesHelper = new Set(tmpArray.sort());
   }
 }

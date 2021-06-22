@@ -2,6 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import Container from '../../shared/models/Container';
+import { ValidateUnique } from '../../shared/validators/unique.validator';
 import { StorageService } from '../../storage.service';
 
 declare const $: any;
@@ -57,9 +58,10 @@ export class ContainersComponent implements OnDestroy {
 
   private createForm(): FormGroup {
     const { required, minLength, min } = Validators;
+    const containers = this.storageService.getContainers().value;
 
     return this.formBuilder.group({
-      name: ['', { validators: [required, minLength(3)] }],
+      name: ['', { validators: [required, minLength(1), ValidateUnique(containers)] }],
       rows: [1, { validators: [required, min(1)] }],
       columns: [1, { validators: [required, min(1)] }],
     });

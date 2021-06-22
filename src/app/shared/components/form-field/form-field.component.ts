@@ -14,25 +14,40 @@ export class FormFieldComponent {
 
   isInvalid(): boolean {
     let invalid = false;
+    const form = this.form;
 
-    if (this.form) {
-      if (this.form.hasError('required') && this.form?.touched) {
-        invalid = true;
-        this.errorMessage = 'This field is required';
-      }
+    if (form && form.touched && form.errors) {
+      invalid = true;
 
-      if (this.form.hasError('min') && this.form?.touched) {
-        invalid = true;
-        this.errorMessage = 'This value is too small';
-      }
+      switch (true) {
+        case form.hasError('required'):
+          this.errorMessage = 'This field is required';
+          break;
 
-      if (this.form.hasError('minlength') && this.form?.touched) {
-        invalid = true;
+        case form.hasError('min'):
+          this.errorMessage = 'This value is too small';
+          break;
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        const minLength = this.form.errors?.minlength?.requiredLength as number;
+        case form.hasError('minlength'): {
+          const { minLength } = form.errors;
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/restrict-template-expressions
+          this.errorMessage = `Please use at least ${minLength.requiredLength} characters`;
+          break;
+        }
 
-        this.errorMessage = `Please use at least ${minLength} characters`;
+        case form.hasError('pattern'): {
+          const { pattern } = form.errors;
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/restrict-template-expressions
+          this.errorMessage = `This value has wrong format, require: ${pattern.requiredPattern}`;
+          break;
+        }
+
+        case form.hasError('unique'): {
+          const { unique } = form.errors;
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/restrict-template-expressions
+          this.errorMessage = unique.message;
+          break;
+        }
       }
     }
     return invalid;
