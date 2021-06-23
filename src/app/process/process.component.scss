@@ -1,0 +1,1 @@
+.btn {  &.is-active {    font-weight: 500;    color: var(--primary);  }  &:hover {    color: var(--primary);  }}.sample-ico {  ::ng-deep .o-ico {    width: 20px;    height: 20px;    margin-right: 8px;    fill: var(--gray-dark);  }}

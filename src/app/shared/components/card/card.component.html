@@ -1,0 +1,4 @@
+<section class="card h-100">
+  <div class="card-header" [ngClass]="{'bg-primary': cardStyle === 'red'}">{{title}}</div>
+  <ng-content select=".card-body"></ng-content>
+</section>

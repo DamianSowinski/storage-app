@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from '../app-routing.module';
+import { CardComponent } from './components/card/card.component';
 import { FabComponent } from './components/fab/fab.component';
 import { FormFieldComponent } from './components/form-field/form-field.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -18,6 +19,7 @@ import { TableComponent } from './components/table/table.component';
     IcoListComponent,
     ModalComponent,
     FormFieldComponent,
+    CardComponent,
   ],
   imports: [AppRoutingModule, CommonModule],
   exports: [
@@ -28,6 +30,7 @@ import { TableComponent } from './components/table/table.component';
     IcoListComponent,
     ModalComponent,
     FormFieldComponent,
+    CardComponent,
   ],
 })
 export class SharedModule {}

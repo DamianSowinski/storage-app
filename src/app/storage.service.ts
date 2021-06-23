@@ -25,6 +25,10 @@ export class StorageService {
     return this.samplesSubject;
   }
 
+  getContainer(key: string): Container | undefined {
+    return this.containers.get(key);
+  }
+
   getContainers(): BehaviorSubject<Map<string, Container>> {
     return this.containerSubject;
   }

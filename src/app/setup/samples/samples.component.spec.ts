@@ -7,7 +7,7 @@ import { SamplesComponent } from './samples.component';
 describe('SamplesComponent', () => {
   let component: SamplesComponent;
   let fixture: ComponentFixture<SamplesComponent>;
-  let storageService: jasmine.SpyObj<StorageService>;
+  let storageService: StorageService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -16,7 +16,7 @@ describe('SamplesComponent', () => {
       providers: [StorageService],
     }).compileComponents();
 
-    storageService = TestBed.inject(StorageService) as jasmine.SpyObj<StorageService>;
+    storageService = TestBed.inject(StorageService);
   });
 
   beforeEach(() => {
