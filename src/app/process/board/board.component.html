@@ -13,10 +13,17 @@
           </tr>
           </thead>
           <tbody>
-          <tr class="table__row"  *ngFor="let row of container.getMatrix(); index as i">
+          <tr class="table__row" *ngFor="let row of container.getMatrix(); index as i">
             <th class="row__header" scope="row">{{i + 1}}</th>
             <td class="table__cell" *ngFor="let cell of row; index as j">
-              <div class="item" [attr.data-colum]="j" [attr.data-row]="i"></div>
+              <button class="item"
+                      (click)="handleSelectCell(i, j)"
+                      [ngClass]="{
+                'is-active': selectedCell?.row === i && selectedCell?.column === j,
+                'is-filled': cell
+              }">
+                <app-ico *ngIf="cell" name="sample"></app-ico>
+              </button>
             </td>
           </tr>
           </tbody>

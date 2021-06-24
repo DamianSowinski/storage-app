@@ -12,6 +12,12 @@ import { Component, Input } from '@angular/core';
       :host {
         line-height: 0;
       }
+
+      .o-ico {
+        width: 1rem;
+        height: 1rem;
+        fill: currentColor;
+      }
     `,
   ],
 })

@@ -1,7 +1,7 @@
 <h3 class="sr-only">{{title}}</h3>
 <app-table class="pt-4" [columns]="tableColumns" [data]="tableData"></app-table>
 
-<app-modal title="Add Sample">
+<app-modal title="Add Sample" >
   <div class="modal-body">
 
     <form id="sampleForm" class="l-form" [formGroup]="form" (ngSubmit)="handleFormSubmit()">
@@ -24,7 +24,7 @@
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-    <button type="submit" form="sampleForm" class="btn btn-success">Add</button>
+    <button type="submit" form="sampleForm" class="btn btn-success" [disabled]="!form.valid">Add</button>
   </div>
 </app-modal>
 

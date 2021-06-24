@@ -42,7 +42,7 @@ export class SamplesComponent implements OnDestroy {
     const { number, type, volume } = this.form.value;
     const sample = new Sample(number, type, volume);
 
-    if (this.storageService.addSample(sample)) {
+    if (this.form.valid && this.storageService.addSample(sample)) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
       $('#modal').modal('hide');
       this.form.reset();

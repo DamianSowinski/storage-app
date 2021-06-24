@@ -36,6 +36,20 @@ class Container {
     return true;
   }
 
+  removeSample(sample: Sample): boolean {
+    for (const row of this.matrix) {
+      for (let i = 0; i < row.length; i++) {
+        if (row[i] === sample) {
+          row[i] = undefined;
+          sample.container = undefined;
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
   getMatrixCell(row: number, column: number): Sample | undefined {
     return this.matrix[row][column];
   }

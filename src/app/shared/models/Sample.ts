@@ -4,7 +4,7 @@ class Sample {
   private readonly _number: string;
   private readonly _type: string;
   private readonly _volume: string;
-  private _container: Container | undefined;
+  private _container?: Container;
 
   constructor(number: string, type: string, volume: string) {
     this._number = number;

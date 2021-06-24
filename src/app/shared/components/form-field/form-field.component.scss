@@ -1,20 +1,28 @@
+@import "src/scss/variables";
+
 ::ng-deep.form-group {
+  position: relative;
+  margin-bottom: 1.25rem;
 
   &.is-invalid {
     .form-control {
-      border-color: var(--red);
+      border-color: $red;
 
       &:focus {
-        box-shadow: 0 0 0 2px var(--red);
+        box-shadow: 0 0 0 2px $red;
       }
     }
 
     .invalid-feedback {
+      position: absolute;
+      bottom: -38px;
       .o-ico {
         width: 12px;
         height: 12px;
-        fill: var(--red);
+        fill: $red;
       }
     }
   }
+
+
 }

@@ -1,8 +1,9 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import * as slug from 'slug';
 import Container from '../models/Container';
 import Sample from '../models/Sample';
 
-export function ValidateUnique(collection: Map<string, Sample | Container>): ValidatorFn {
+export function ValidateUnique(collection: Map<string, Sample | Container>, slugify = false): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     if (!collection.size) {
       return null;
@@ -13,6 +14,10 @@ export function ValidateUnique(collection: Map<string, Sample | Container>): Val
 
       if (typeof value === 'string') {
         value = value.toLowerCase();
+      }
+
+      if (slugify) {
+        value = slug(value);
       }
 
       if (collection.has(value)) {

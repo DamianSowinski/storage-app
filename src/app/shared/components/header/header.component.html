@@ -5,7 +5,7 @@
         <a class="btn"
            [routerLink]="page.path" routerLinkActive #rla="routerLinkActive"
            [ngClass]="{ 'btn-light': !rla.isActive, 'btn-primary': rla.isActive}"
-           title="Go to setup page">{{page.title}}</a>
+           title="Go to {{page.title}} page">{{page.title}}</a>
       </li>
     </ul>
   </nav>

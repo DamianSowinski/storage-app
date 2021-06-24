@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import * as slug from 'slug';
 import Container from './shared/models/Container';
 import Sample from './shared/models/Sample';
 
@@ -19,6 +20,13 @@ export class StorageService {
     this.samplesSubject = new BehaviorSubject(this.samples);
     this.containerSubject = new BehaviorSubject(this.containers);
     this.fillWithSampleData();
+
+    const cont = this.containers.get('box');
+    const sample = this.samples.get('21-1');
+
+    if (cont && sample) {
+      cont.addSample(sample, 2, 1);
+    }
   }
 
   getSamples(): BehaviorSubject<Map<string, Sample>> {
@@ -34,31 +42,36 @@ export class StorageService {
   }
 
   addSample(sample: Sample): boolean {
-    if (this.checkSampleExist(sample)) {
+    if (this.hasSample(sample)) {
       return false;
     }
 
-    this.samples.set(sample.number.toLowerCase(), sample);
+    this.samples.set(sample.number, sample);
     this.samplesSubject.next(this.samples);
     return true;
   }
 
   addContainer(container: Container): boolean {
-    if (this.checkContainerExist(container)) {
+    if (this.hasContainer(container)) {
       return false;
     }
 
-    this.containers.set(container.name.toLowerCase(), container);
+    this.containers.set(slug(container.name), container);
     this.containerSubject.next(this.containers);
     return true;
   }
 
-  checkSampleExist(sample: Sample): boolean {
-    return this.samples.has(sample.number.toLowerCase());
+  updateStream(): void {
+    this.samplesSubject.next(this.samples);
+    this.containerSubject.next(this.containers);
   }
 
-  checkContainerExist(container: Container): boolean {
-    return this.containers.has(container.name.toLowerCase());
+  private hasSample(sample: Sample): boolean {
+    return this.samples.has(sample.number);
+  }
+
+  private hasContainer(container: Container): boolean {
+    return this.containers.has(slug(container.name));
   }
 
   private fillWithSampleData(): void {

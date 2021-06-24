@@ -40,7 +40,7 @@ export class ContainersComponent implements OnDestroy {
     const { name, rows, columns } = this.form.value;
     const container = new Container(name, rows, columns);
 
-    if (this.storageService.addContainer(container)) {
+    if (this.form.valid && this.storageService.addContainer(container)) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
       $('#modal').modal('hide');
       this.form.reset();
@@ -61,7 +61,7 @@ export class ContainersComponent implements OnDestroy {
     const containers = this.storageService.getContainers().value;
 
     return this.formBuilder.group({
-      name: ['', { validators: [required, minLength(1), ValidateUnique(containers)] }],
+      name: ['', { validators: [required, minLength(1), ValidateUnique(containers, true)] }],
       rows: [1, { validators: [required, min(1)] }],
       columns: [1, { validators: [required, min(1)] }],
     });

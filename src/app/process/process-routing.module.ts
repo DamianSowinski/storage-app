@@ -12,6 +12,7 @@ const routes: Routes = [
       { path: ':slug', component: BoardComponent },
     ],
   },
+  { path: '**', redirectTo: 'setup/samples' },
 ];
 
 @NgModule({
