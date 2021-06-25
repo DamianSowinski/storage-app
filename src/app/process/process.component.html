@@ -21,7 +21,7 @@
         <div class="lead font-weight-bolder">{{ (selectedCell.row || 0) + 1 }} : {{ (selectedCell.column || 0) + 1 }}</div>
         <div class="text-center" *ngIf="selectedCell.sample">
           <span class="font-weight-bolder text-uppercase">Checked in</span>
-          <button class="btn-check-out btn text-white" (click)="handleCheckOut()">
+          <button class="btn-check-out btn text-white d-flex align-items-center" (click)="handleCheckOut()">
             <app-ico class="mr-1" name="check-out"></app-ico>
             <span>Check out</span>
           </button>
@@ -49,7 +49,7 @@
 
       <ul class="l-sample-list list-unstyled">
         <li *ngFor="let sample of freeSamples">
-          <button class="btn-sample btn btn-block text-left" [class.is-selected]="selectedSample === sample"
+          <button class="btn-sample btn btn-block text-left d-flex align-items-center" [class.is-selected]="selectedSample === sample"
                   (click)="handleSelectSample(sample)">
             <app-ico class="sample-ico" name="sample"></app-ico>
             <span>Sample#: {{sample.number}} {{sample.type}} {{sample.volume}}</span>

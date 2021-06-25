@@ -1,6 +1,8 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
+import { APP_NAME } from '../../../environments/environment';
 import Container from '../../shared/models/Container';
 import { ValidateUnique } from '../../shared/validators/unique.validator';
 import { StorageService } from '../../storage.service';
@@ -19,7 +21,9 @@ export class ContainersComponent implements OnDestroy {
   form: FormGroup;
   containersSubscription: Subscription;
 
-  constructor(private storageService: StorageService, private formBuilder: FormBuilder) {
+  constructor(private storageService: StorageService, private formBuilder: FormBuilder, private titleService: Title) {
+    titleService.setTitle(`${this.title} | ${APP_NAME}`);
+
     this.containersSubscription = this.storageService
       .getContainers()
       .subscribe((containers) => this.fillTableData(containers));

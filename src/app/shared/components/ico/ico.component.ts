@@ -9,13 +9,12 @@ import { Component, Input } from '@angular/core';
   `,
   styles: [
     `
-      :host {
-        line-height: 0;
-      }
-
       .o-ico {
         width: 1rem;
         height: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         fill: currentColor;
       }
     `,

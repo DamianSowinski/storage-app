@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
+import { APP_NAME, COMPANY_NAME } from '../../../environments/environment';
 import Container from '../../shared/models/Container';
 import { StorageService } from '../../storage.service';
 import { BoardService } from './board.service';
-
-const TITLE = 'SoftSystem';
 
 @Component({
   selector: 'app-board',
@@ -13,14 +13,17 @@ const TITLE = 'SoftSystem';
 })
 export class BoardComponent {
   container?: Container;
-  title = TITLE;
+  title = COMPANY_NAME;
   selectedCell?: { row: number; column: number };
 
   constructor(
     private route: ActivatedRoute,
     private storageService: StorageService,
-    private boardService: BoardService
+    private boardService: BoardService,
+    private titleService: Title
   ) {
+    titleService.setTitle(`${this.title} | ${APP_NAME}`);
+
     this.route.params.subscribe((params) => {
       this.container = this.storageService.getContainer(params.slug);
       this.updateTitle();
@@ -50,7 +53,8 @@ export class BoardComponent {
 
   private updateTitle(): void {
     if (this.container) {
-      this.title = `${TITLE} / ${this.container.name}`;
+      this.titleService.setTitle(`${this.container.name} - ${COMPANY_NAME}  | ${APP_NAME}`);
+      this.title = `${COMPANY_NAME} / ${this.container.name}`;
     }
   }
 }

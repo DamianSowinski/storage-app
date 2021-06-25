@@ -1,6 +1,8 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
+import { APP_NAME } from '../../../environments/environment';
 import Sample from '../../shared/models/Sample';
 import { ValidateUnique } from '../../shared/validators/unique.validator';
 import { StorageService } from '../../storage.service';
@@ -20,7 +22,9 @@ export class SamplesComponent implements OnDestroy {
   samplesSubscription: Subscription;
   typesHelper: Set<string> = new Set([]);
 
-  constructor(private storageService: StorageService, private formBuilder: FormBuilder) {
+  constructor(private storageService: StorageService, private formBuilder: FormBuilder, private titleService: Title) {
+    titleService.setTitle(`${this.title} | ${APP_NAME}`);
+
     this.samplesSubscription = this.storageService.getSamples().subscribe((samples) => {
       this.fillTableData(samples);
       this.fillTypesHelepr(samples);
