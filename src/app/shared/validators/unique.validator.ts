@@ -10,7 +10,7 @@ export function ValidateUnique(collection: Map<string, Sample | Container>, slug
     }
 
     if (control.valueChanges && control.dirty) {
-      let value = control.value;
+      let { value } = control;
 
       if (typeof value === 'string') {
         value = value.toLowerCase();

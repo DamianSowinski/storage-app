@@ -4,6 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { APP_NAME } from '../../../environments/environment';
 import Sample from '../../shared/models/Sample';
+import { ValidatePattern } from '../../shared/validators/pattern.validator';
 import { ValidateUnique } from '../../shared/validators/unique.validator';
 import { StorageService } from '../../storage.service';
 
@@ -62,13 +63,34 @@ export class SamplesComponent implements OnDestroy {
   }
 
   private createForm(): FormGroup {
-    const { required, minLength, pattern } = Validators;
+    const { required, minLength } = Validators;
     const samples = this.storageService.getSamples().value;
 
     return this.formBuilder.group({
-      number: ['', { validators: [required, minLength(1), ValidateUnique(samples)] }],
+      number: [
+        '',
+        {
+          validators: [
+            required,
+            minLength(1),
+            ValidateUnique(samples),
+            ValidatePattern(/^[0-9]+(-?[0-9]+)*$/, 'Only number with a optional minus separator allowed eg. 1 or 1-1'),
+          ],
+        },
+      ],
       type: ['', { validators: [required, minLength(1)] }],
-      volume: ['', { validators: [required, pattern('^[0-9]+((,|.)?[0-9]+)?(l|ml|µl|nl|pl){1}$')] }],
+      volume: [
+        '',
+        {
+          validators: [
+            required,
+            ValidatePattern(
+              /^[0-9]+((,|.)?[0-9]+)?(l|ml|µl|nl|pl)$/,
+              'Only number with a volume unit allowed eg: 10ml or 0.1µl'
+            ),
+          ],
+        },
+      ],
     });
   }
 

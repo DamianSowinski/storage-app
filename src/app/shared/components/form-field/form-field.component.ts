@@ -38,7 +38,7 @@ export class FormFieldComponent {
         case form.hasError('pattern'): {
           const { pattern } = form.errors;
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/restrict-template-expressions
-          this.errorMessage = `This value has wrong format, require: ${pattern.requiredPattern}`;
+          this.errorMessage = pattern.message;
           break;
         }
 
