@@ -1,0 +1,3 @@
+User-Agent: *
+Disallow:
+Sitemap: http://test.es3d.pl/sitemap.xml

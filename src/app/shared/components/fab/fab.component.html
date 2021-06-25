@@ -1,9 +1,10 @@
 <button class="fab shadow-sm btn {{cssClass}}"
         (click)="handleClick()"
         data-tooltip="tooltip" [title]="tooltip"
+        aria-haspopup="true"
         >
-
-  <app-ico [name]="name"></app-ico>
+  <span class="sr-only">{{name}} </span>
+  <app-ico [name]="name" aria-hidden="true"></app-ico>
 </button>
 
 

@@ -1,1 +1,1 @@
-@import "src/scss/variables";.card {  &-header {    color: $primary;    &.bg-primary {      color: $white;      font-weight: 500;    }  }}
+@import "src/scss/variables";.card {  &-header {    color: $primary;    &.bg-primary {      font-weight: 500;      color: $white;    }  }  .clear-h {    font-size: 1rem;    font-weight: unset;    margin: 0;  }}

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://test.es3d.pl/</loc>
+    <lastmod>2021-06-25T14:15:31+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://test.es3d.pl/setup/samples</loc>
+    <lastmod>2021-06-25T14:15:31+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://test.es3d.pl/setup/containers</loc>
+    <lastmod>2021-06-25T14:15:31+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://test.es3d.pl/process</loc>
+    <lastmod>2021-06-25T14:15:31+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://test.es3d.pl/process/box</loc>
+    <lastmod>2021-06-25T14:15:31+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://test.es3d.pl/process/shelve</loc>
+    <lastmod>2021-06-25T14:15:31+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://test.es3d.pl/process/main-box</loc>
+    <lastmod>2021-06-25T14:15:31+00:00</lastmod>
+  </url>
+</urlset>

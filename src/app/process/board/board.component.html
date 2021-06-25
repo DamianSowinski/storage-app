@@ -8,7 +8,7 @@
         <table class="table table-borderless">
           <thead>
           <tr>
-            <th scope="col"></th>
+            <th scope="col" aria-hidden="true"></th>
             <th class="table__header text-center" scope="col" *ngFor="let column of container.getMatrix()[0]; index as i">{{ i + 1 }}</th>
           </tr>
           </thead>
@@ -18,11 +18,13 @@
             <td class="table__cell" *ngFor="let cell of row; index as j">
               <button class="item"
                       (click)="handleSelectCell(i, j)"
+                      [attr.aria-selected]="selectedCell?.row === i && selectedCell?.column === j ? 'true' : undefined"
                       [ngClass]="{
                 'is-active': selectedCell?.row === i && selectedCell?.column === j,
                 'is-filled': cell
               }">
-                <app-ico *ngIf="cell" name="sample"></app-ico>
+                <span class="sr-only">Cell (row {{i+1}}, column {{j+1}})</span>
+                <app-ico *ngIf="cell" name="sample" aria-hidden="true"></app-ico>
               </button>
             </td>
           </tr>
