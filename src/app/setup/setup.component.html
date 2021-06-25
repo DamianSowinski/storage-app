@@ -6,7 +6,7 @@
       <a class="btn"
          [routerLink]="page.path" routerLinkActive #rla="routerLinkActive"
          [ngClass]="{ 'btn-light': !rla.isActive, 'btn-primary': rla.isActive}"
-         [attr.aria-selected]="rla.isActive ? 'true' : undefined"
+         [attr.aria-current]="rla.isActive ? 'page' : undefined"
          title="Go to {{page.title}} page">{{page.title}}</a>
     </li>
   </ul>

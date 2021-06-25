@@ -1,11 +1,11 @@
 <header class="navbar navbar-light bg-light shadow-sm" itemscope="itemscope" itemtype="https://schema.org/WPHeader">
-  <nav class="flex-grow-1" role="navigation" itemscope itemtype="https://schema.org/SiteNavigationElement">
+  <nav class="flex-grow-1" itemscope itemtype="https://schema.org/SiteNavigationElement">
     <ul class="list-inline m-0">
       <li class="list-inline-item" *ngFor="let page of pages">
         <a class="btn"
            [routerLink]="page.path" routerLinkActive #rla="routerLinkActive"
            [ngClass]="{ 'btn-light': !rla.isActive, 'btn-primary': rla.isActive}"
-           [attr.aria-selected]="rla.isActive ? 'true' : undefined"
+           [attr.aria-current]="rla.isActive ? 'page' : undefined"
            title="Go to {{page.title}} page"><span itemprop="name">{{page.title}}</span></a>
       </li>
     </ul>

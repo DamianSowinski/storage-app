@@ -6,7 +6,7 @@
         <li *ngFor="let container of containerPageList">
           <a class="btn-container-list btn btn-block text-left" [routerLink]="['.', container.path]" routerLinkActive #rla="routerLinkActive"
              [class.is-active]="rla.isActive"
-             [attr.aria-selected]="rla.isActive ? 'true' : undefined"
+             [attr.aria-current]="rla.isActive ? 'page' : undefined"
              title="Select {{container.title}} storage">{{container.title}}</a>
         </li>
       </ul>
@@ -44,6 +44,7 @@
     <div class="card-body p-0">
       <button class="btn-check-in btn btn-block d-flex justify-content-center align-items-center p-3"
               (click)="handleCheckIn()"
+              [attr.aria-disabled]="!(selectedSample && selectedCell && !selectedCell.sample )"
               [disabled]="!(selectedSample && selectedCell && !selectedCell.sample )">
         <app-ico class="mr-1" name="check-in" aria-hidden="true"></app-ico>
         <span>Check in</span>
@@ -53,7 +54,7 @@
         <li *ngFor="let sample of freeSamples">
           <button class="btn-sample btn btn-block text-left d-flex align-items-center" [class.is-selected]="selectedSample === sample"
                   (click)="handleSelectSample(sample)"
-                  [attr.aria-selected]="selectedSample === sample ? 'true' : undefined"
+                  [attr.aria-current]="selectedSample === sample ? 'page' : undefined"
           >
             <app-ico class="sample-ico" name="sample" aria-hidden="true"></app-ico>
             <span>Sample#: {{sample.number}} {{sample.type}} {{sample.volume}}</span>
