@@ -22,7 +22,7 @@ describe('FabComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should handle btn click', () => {
+  it('should emit click event when is clicked', () => {
     const spyClick = spyOn(component, 'handleClick').and.callThrough();
     const btn = fixture.debugElement.query(By.css('button'));
 

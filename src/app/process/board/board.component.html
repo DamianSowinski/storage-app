@@ -18,7 +18,7 @@
             <td class="table__cell" *ngFor="let cell of row; index as j">
               <button class="item"
                       (click)="handleSelectCell(i, j)"
-                      [attr.aria-current]="selectedCell?.row === i && selectedCell?.column === j ? 'page' : undefined"
+                      [attr.aria-selected]="selectedCell?.row === i && selectedCell?.column === j ? true : undefined"
                       [ngClass]="{
                 'is-active': selectedCell?.row === i && selectedCell?.column === j,
                 'is-filled': cell
@@ -36,6 +36,4 @@
   </div>
 </app-card>
 
-
 <ng-template #noSelected><p class="lead text-center">Please select storage</p></ng-template>
-

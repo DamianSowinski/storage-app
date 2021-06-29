@@ -22,7 +22,7 @@ describe('ModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have display modal title', () => {
+  it('should render modal title', () => {
     component.title = 'Modal title';
     fixture.detectChanges();
     const title = fixture.debugElement.query(By.css('.modal-title')).nativeElement as HTMLHeadingElement;

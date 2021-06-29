@@ -44,17 +44,17 @@
     <div class="card-body p-0">
       <button class="btn-check-in btn btn-block d-flex justify-content-center align-items-center p-3"
               (click)="handleCheckIn()"
-              [attr.aria-disabled]="!(selectedSample && selectedCell && !selectedCell.sample )"
-              [disabled]="!(selectedSample && selectedCell && !selectedCell.sample )">
+              [attr.aria-disabled]="isDisableCheckInBtn()"
+              [disabled]="isDisableCheckInBtn()">
         <app-ico class="mr-1" name="check-in" aria-hidden="true"></app-ico>
         <span>Check in</span>
       </button>
 
       <ul class="l-sample-list list-unstyled">
         <li *ngFor="let sample of freeSamples">
-          <button class="btn-sample btn btn-block text-left d-flex align-items-center" [class.is-selected]="selectedSample === sample"
+          <button class="btn-sample btn btn-block text-left d-flex align-items-center" [class.is-selected]="selectedPendingSample === sample"
                   (click)="handleSelectSample(sample)"
-                  [attr.aria-current]="selectedSample === sample ? 'page' : undefined"
+                  [attr.aria-current]="selectedPendingSample === sample ? 'page' : undefined"
           >
             <app-ico class="sample-ico" name="sample" aria-hidden="true"></app-ico>
             <span>Sample#: {{sample.number}} {{sample.type}} {{sample.volume}}</span>

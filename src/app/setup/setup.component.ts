@@ -4,7 +4,6 @@ import Page from '../shared/types/Page';
 @Component({
   selector: 'app-setup',
   templateUrl: './setup.component.html',
-  styleUrls: ['./setup.component.scss'],
 })
 export class SetupComponent {
   title = 'Setup';

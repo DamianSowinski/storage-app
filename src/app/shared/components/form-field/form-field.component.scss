@@ -1,8 +1,7 @@
 @import "src/scss/variables";
 
 ::ng-deep.form-group {
-  position: relative;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
 
   &.is-invalid {
     .form-control {
@@ -14,8 +13,9 @@
     }
 
     .invalid-feedback {
-      position: absolute;
-      bottom: -38px;
+      line-height: 1rem;
+      margin-bottom: -1.25rem;
+
       .o-ico {
         width: 12px;
         height: 12px;
@@ -23,6 +23,4 @@
       }
     }
   }
-
-
 }

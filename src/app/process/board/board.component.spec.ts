@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
+import { By, Title } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
-import { of } from 'rxjs';
+import { APP_NAME, COMPANY_NAME } from '../../../environments/environment';
 import { CardComponent } from '../../shared/components/card/card.component';
 import { IcoListComponent } from '../../shared/components/ico/ico-list.component';
 import { IcoComponent } from '../../shared/components/ico/ico.component';
@@ -15,41 +14,31 @@ import { BoardService } from './board.service';
 describe('BoardComponent', () => {
   let component: BoardComponent;
   let fixture: ComponentFixture<BoardComponent>;
+  let titleService: Title;
   let storageService: jasmine.SpyObj<StorageService>;
-  let boardService: jasmine.SpyObj<BoardService>;
+  let boardService: BoardService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [BoardComponent, CardComponent, IcoComponent, IcoListComponent],
       imports: [RouterTestingModule],
       providers: [
+        Title,
+        BoardService,
         {
           provide: StorageService,
           useValue: jasmine.createSpyObj('StorageService', ['getContainer']),
         },
-        {
-          provide: BoardService,
-          useValue: jasmine.createSpyObj('BoardService', ['setSelectedCell', 'clearSelection', 'getSelectedCell']),
-        },
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            params: of({ slug: 'box' }),
-          },
-        },
       ],
     }).compileComponents();
+
+    titleService = TestBed.inject(Title);
     storageService = TestBed.inject(StorageService) as jasmine.SpyObj<StorageService>;
-    boardService = TestBed.inject(BoardService) as jasmine.SpyObj<BoardService>;
+    boardService = TestBed.inject(BoardService);
   });
 
   beforeEach(() => {
-    const container = new Container('Box', 10, 12);
-
-    storageService.getContainer.and.returnValue(container);
-    boardService.getSelectedCell.and.callThrough();
-    boardService.setSelectedCell.and.callThrough();
-    boardService.clearSelection.and.callThrough();
+    storageService.getContainer.and.returnValue(new Container('A', 10, 10));
 
     fixture = TestBed.createComponent(BoardComponent);
     component = fixture.componentInstance;
@@ -60,81 +49,83 @@ describe('BoardComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set card title', () => {
-    expect(component.title).toEqual('SoftSystem / Box');
-
-    storageService.getContainer.and.returnValue(undefined);
-    fixture = TestBed.createComponent(BoardComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-
-    expect(component.title).toEqual('SoftSystem');
-  });
-
-  it('should fetch container', () => {
+  it('should set initial values', () => {
     expect(component.container).toBeTruthy();
+    expect(component.selectedCell).toBeUndefined();
   });
 
-  it('should show information about samples', () => {
-    let samplesInfo = fixture.debugElement.query(By.css('.card-body .d-flex.justify-content-end'))
+  it('should set page title', () => {
+    expect(titleService.getTitle()).toEqual(`A - ${COMPANY_NAME} | ${APP_NAME}`);
+  });
+
+  it('should render card title', () => {
+    expect(component.title).toEqual('SoftSystem / A');
+  });
+
+  it('should render board information', () => {
+    const containerInfoHTML = fixture.debugElement.query(By.css('.card-body .d-flex.justify-content-end'))
       .nativeElement as HTMLDivElement;
-    expect(samplesInfo.innerText).toEqual('0 Samples / 120 slots / 120 empty');
 
-    const container = new Container('Box', 10, 12);
-    container.addSample(new Sample('1', 'Blood', '10ml'), 1, 1);
+    expect(containerInfoHTML.innerText).toEqual('0 Samples / 100 slots / 100 empty');
+  });
 
-    storageService.getContainer.and.returnValue(container);
+  it('should render board', () => {
+    const boardHTML = fixture.debugElement.query(By.css('.table')).nativeElement as HTMLDivElement;
+    expect(boardHTML).toBeTruthy();
+    expect(boardHTML.querySelectorAll('.table__header')).toHaveSize(10);
+    expect(boardHTML.querySelectorAll('.table__row')).toHaveSize(10);
+    expect(boardHTML.querySelectorAll('.item')).toHaveSize(10 * 10);
+  });
 
-    fixture = TestBed.createComponent(BoardComponent);
-    component = fixture.componentInstance;
+  it('should mark selected cell', () => {
+    component.selectedCell = { row: 0, column: 0 };
     fixture.detectChanges();
+    const itemHTML = fixture.debugElement.queryAll(By.css('.item'))[0].nativeElement as HTMLButtonElement;
 
-    samplesInfo = fixture.debugElement.query(By.css('.card-body .d-flex.justify-content-end'))
-      .nativeElement as HTMLDivElement;
-    expect(samplesInfo.innerText).toEqual('1 Sample / 120 slots / 119 empty');
+    expect(itemHTML.classList.contains('is-active')).toBeTrue();
   });
 
-  it('should generate board', () => {
-    const board = fixture.debugElement.query(By.css('.table')).nativeElement as HTMLDivElement;
-    expect(board).toBeTruthy();
-    expect(board.querySelectorAll('.table__header')).toHaveSize(12);
-    expect(board.querySelectorAll('.table__row')).toHaveSize(10);
-    expect(board.querySelectorAll('.item')).toHaveSize(10 * 12);
-  });
-
-  it('should display stored sample on board', () => {
-    const container = new Container('Box', 10, 12);
-    let icons = fixture.debugElement.queryAll(By.css('.table__cell .item svg'));
-    expect(icons).toHaveSize(0);
-
-    container.addSample(new Sample('1', 'Blood', '10ml'), 0, 1);
-    storageService.getContainer.and.returnValue(container);
-
-    fixture = TestBed.createComponent(BoardComponent);
-    component = fixture.componentInstance;
+  it('should mark stored sample', () => {
+    component.container?.addSample(new Sample('1', 'a', 'aa'), 0, 0);
     fixture.detectChanges();
+    const itemHTML = fixture.debugElement.queryAll(By.css('.item'))[0].nativeElement as HTMLButtonElement;
 
-    icons = fixture.debugElement.queryAll(By.css('.table__cell .item svg'));
-
-    expect(icons).toHaveSize(1);
+    expect(itemHTML.classList.contains('is-filled')).toBeTrue();
+    expect(itemHTML.querySelector('svg')).toBeTruthy();
   });
 
-  it('should emit select cell when cell is clicked', () => {
-    let btnCell = fixture.debugElement.queryAll(By.css('.table__cell .item'))[1];
+  it('should emit click event when pending sample is clicked', () => {
+    const btnCell = fixture.debugElement.queryAll(By.css('.item'))[0];
     const spySelect = spyOn(component, 'handleSelectCell').and.callThrough();
-
     btnCell.triggerEventHandler('click', {});
 
     expect(spySelect).toHaveBeenCalled();
+  });
 
-    expect(component.selectedCell?.row).toEqual(0);
-    expect(component.selectedCell?.column).toEqual(1);
+  it('should handleSelectCell set selectedCell in board service', () => {
+    component.handleSelectCell(0, 1);
 
-    btnCell = fixture.debugElement.queryAll(By.css('.table__cell .item'))[2];
-    btnCell.triggerEventHandler('click', {});
+    expect(boardService.getSelectedCellStream().value?.row).toEqual(0);
+    expect(boardService.getSelectedCellStream().value?.column).toEqual(1);
+  });
 
-    expect(spySelect).toHaveBeenCalled();
-    expect(component.selectedCell?.row).toEqual(0);
-    expect(component.selectedCell?.column).toEqual(2);
+  it('should handleSelectCell return valid info', () => {
+    component.container = new Container('A', 1, 1);
+    expect(component.createSampleInfo()).toEqual('0 Samples / 1 slots / 1 empty');
+
+    component.container = new Container('A', 3, 1);
+    expect(component.createSampleInfo()).toEqual('0 Samples / 3 slots / 3 empty');
+
+    component.container = new Container('A', 2, 4);
+    expect(component.createSampleInfo()).toEqual('0 Samples / 8 slots / 8 empty');
+
+    const container = new Container('A', 4, 4);
+    container.addSample(new Sample('1', 'a', 'aa'), 0, 0);
+    component.container = container;
+    expect(component.createSampleInfo()).toEqual('1 Sample / 16 slots / 15 empty');
+
+    container.addSample(new Sample('2', 'b', 'bb'), 1, 1);
+    component.container = container;
+    expect(component.createSampleInfo()).toEqual('2 Samples / 16 slots / 14 empty');
   });
 });

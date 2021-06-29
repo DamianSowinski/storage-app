@@ -6,11 +6,11 @@ import SelectedCell from '../../shared/types/SelectedCell';
 
 @Injectable()
 export class BoardService {
-  private readonly selectedCell: BehaviorSubject<SelectedCell | undefined>;
+  private readonly selectedCell$: BehaviorSubject<SelectedCell | undefined>;
   private _selectedContainer?: Container;
 
   constructor() {
-    this.selectedCell = new BehaviorSubject<SelectedCell | undefined>(undefined);
+    this.selectedCell$ = new BehaviorSubject<SelectedCell | undefined>(undefined);
   }
 
   get selectedContainer(): Container | undefined {
@@ -21,30 +21,30 @@ export class BoardService {
     this._selectedContainer = value;
   }
 
-  getSelectedCell(): BehaviorSubject<SelectedCell | undefined> {
-    return this.selectedCell;
+  getSelectedCellStream(): BehaviorSubject<SelectedCell | undefined> {
+    return this.selectedCell$;
   }
 
   setSelectedCell(select: SelectedCell): void {
-    this.selectedCell.next(select);
+    this.selectedCell$.next(select);
   }
 
   addSampleToSelectedCell(sample: Sample): void {
-    if (this.selectedCell.value) {
-      this.selectedCell.value.sample = sample;
-      this.selectedCell.next(this.selectedCell.value);
+    if (this.selectedCell$.value) {
+      this.selectedCell$.value.sample = sample;
+      this.selectedCell$.next(this.selectedCell$.value);
     }
   }
 
   removeSampleFromSelectedCell(): void {
-    if (this.selectedCell.value) {
-      this.selectedCell.value.sample = undefined;
-      this.selectedCell.next(this.selectedCell.value);
+    if (this.selectedCell$.value) {
+      this.selectedCell$.value.sample = undefined;
+      this.selectedCell$.next(this.selectedCell$.value);
     }
   }
 
   clearSelection(): void {
-    this.selectedCell.next(undefined);
+    this.selectedCell$.next(undefined);
     this._selectedContainer = undefined;
   }
 }

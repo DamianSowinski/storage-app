@@ -9,77 +9,90 @@ describe('StorageService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(StorageService);
+    service.clear();
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should store samples', () => {
-    let samples = service.getSamples().value;
+  it('should return samples stream', () => {
+    expect(service.getSamplesStream).toBeTruthy();
+  });
+
+  it('should return containers stream', () => {
+    expect(service.getSamplesStream).toBeTruthy();
+  });
+
+  it('should add sample', () => {
+    let samples = service.getSamplesStream().value;
     const size = samples.size;
-    const isAdd = service.addSample(new Sample('1-1', 'Blood', '10ml'));
-    samples = service.getSamples().value;
+    const isAdd = service.addSample(new Sample('1', 'a', 'aa'));
+    samples = service.getSamplesStream().value;
+
     expect(isAdd).toBeTrue();
     expect(samples).toHaveSize(size + 1);
+    expect(samples.has('1')).toBeTrue();
   });
 
   it('should store unique samples', () => {
-    let samples = service.getSamples().value;
+    let samples = service.getSamplesStream().value;
     const size = samples.size;
+    let isAdd = service.addSample(new Sample('1', 'a', 'aa'));
+    samples = service.getSamplesStream().value;
 
-    let isAdd = service.addSample(new Sample('1-1', 'Blood', '10ml'));
-    samples = service.getSamples().value;
     expect(isAdd).toBeTrue();
     expect(samples).toHaveSize(size + 1);
 
-    isAdd = service.addSample(new Sample('1-1', 'Blood', '10ml'));
-    samples = service.getSamples().value;
+    isAdd = service.addSample(new Sample('1', 'a', 'aa'));
+    samples = service.getSamplesStream().value;
+
     expect(isAdd).toBeFalse();
     expect(samples).toHaveSize(size + 1);
 
-    isAdd = service.addSample(new Sample('1-2', 'Blood', '10ml'));
-    samples = service.getSamples().value;
+    isAdd = service.addSample(new Sample('2', 'b', 'bb'));
+    samples = service.getSamplesStream().value;
+
     expect(isAdd).toBeTrue();
     expect(samples).toHaveSize(size + 2);
   });
 
-  it('should store containers', () => {
-    let containers = service.getContainers().value;
+  it('should add containers', () => {
+    let containers = service.getContainersStream().value;
     const size = containers.size;
+    const isAdd = service.addContainer(new Container('A', 1, 1));
+    containers = service.getContainersStream().value;
 
-    const isAdd = service.addContainer(new Container('Main Tray', 12, 12));
-    containers = service.getContainers().value;
     expect(isAdd).toBeTrue();
     expect(containers).toHaveSize(size + 1);
-    expect(containers.get('main-tray')).toBeTruthy();
+    expect(containers.has('a')).toBeTrue();
   });
 
   it('should store unique containers', () => {
-    let containers = service.getContainers().value;
+    let containers = service.getContainersStream().value;
     const size = containers.size;
+    let isAdd = service.addContainer(new Container('A', 1, 1));
+    containers = service.getContainersStream().value;
 
-    let isAdd = service.addContainer(new Container('Small fridge', 12, 12));
-    containers = service.getContainers().value;
     expect(isAdd).toBeTrue();
     expect(containers).toHaveSize(size + 1);
-    expect(containers.get('small-fridge')).toBeTruthy();
 
-    isAdd = service.addContainer(new Container('Small Fridge', 12, 12));
-    containers = service.getContainers().value;
+    isAdd = service.addContainer(new Container('A', 1, 1));
+    containers = service.getContainersStream().value;
+
     expect(isAdd).toBeFalse();
     expect(containers).toHaveSize(size + 1);
-    expect(containers.get('small-fridge')).toBeTruthy();
 
-    isAdd = service.addContainer(new Container('Tray', 12, 12));
-    containers = service.getContainers().value;
+    isAdd = service.addContainer(new Container('B', 1, 1));
+    containers = service.getContainersStream().value;
+
     expect(isAdd).toBeTrue();
     expect(containers).toHaveSize(size + 2);
   });
 
   it('should get a container by key', function () {
-    service.addContainer(new Container('Small fridge', 12, 12));
+    service.addContainer(new Container('A', 1, 1));
 
-    expect(service.getContainer('small-fridge')).toBeTruthy();
+    expect(service.getContainer('a')).toBeTruthy();
   });
 });

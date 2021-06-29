@@ -22,7 +22,7 @@ describe('TableComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display valid inputs', () => {
+  it('should fill table', () => {
     component.columns = ['col1', 'col2', 'col3'];
     component.data = [
       [1, 'a', 'b'],
@@ -41,7 +41,7 @@ describe('TableComponent', () => {
     expect(dataFields.length).toEqual(6);
   });
 
-  it('should display table message for invalid inputs', () => {
+  it('should display message for invalid data', () => {
     fixture = TestBed.createComponent(TableComponent);
     component = fixture.componentInstance;
     component.columns = ['col1', 'col2', 'col3'];

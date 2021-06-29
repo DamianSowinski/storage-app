@@ -1,25 +1,46 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
+import { By, Title } from '@angular/platform-browser';
+import { RouterTestingModule } from '@angular/router/testing';
+import { BehaviorSubject } from 'rxjs';
+import { APP_NAME } from '../../../environments/environment';
+import { FabComponent } from '../../shared/components/fab/fab.component';
+import { TableComponent } from '../../shared/components/table/table.component';
+import Container from '../../shared/models/Container';
 import { StorageService } from '../../storage.service';
 import { ContainersComponent } from './containers.component';
 
 describe('ContainersComponent', () => {
   let component: ContainersComponent;
   let fixture: ComponentFixture<ContainersComponent>;
+  let titleService: Title;
   let storageService: jasmine.SpyObj<StorageService>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ContainersComponent],
-      imports: [ReactiveFormsModule],
-      providers: [StorageService],
+      declarations: [ContainersComponent, TableComponent, FabComponent],
+      imports: [RouterTestingModule],
+      providers: [
+        Title,
+        {
+          provide: StorageService,
+          useValue: jasmine.createSpyObj('StorageService', ['getContainersStream']),
+        },
+      ],
     }).compileComponents();
 
+    titleService = TestBed.inject(Title);
     storageService = TestBed.inject(StorageService) as jasmine.SpyObj<StorageService>;
   });
 
   beforeEach(() => {
+    const containers = new Map<string, Container>();
+    containers.set('a', new Container('A', 1, 1));
+    containers.set('b', new Container('B', 1, 1));
+
+    storageService.getContainersStream.and.returnValue(
+      new BehaviorSubject<Map<string, Container>>(new Map(containers))
+    );
+
     fixture = TestBed.createComponent(ContainersComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -29,11 +50,19 @@ describe('ContainersComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have display section title', () => {
-    component.title = 'Containers';
-    fixture.detectChanges();
-    const title = fixture.debugElement.query(By.css('h3')).nativeElement as HTMLHeadingElement;
-    expect(title.innerText).toEqual('Containers');
+  it('should set initial values', () => {
+    expect(component.tableColumns).toHaveSize(3);
+    expect(component.tableData).toHaveSize(2);
+  });
+
+  it('should set page title', () => {
+    expect(titleService.getTitle()).toEqual(`${component.title} | ${APP_NAME}`);
+  });
+
+  it('should render section title', () => {
+    const titleHTML = fixture.debugElement.query(By.css('h3')).nativeElement as HTMLHeadingElement;
+
+    expect(titleHTML.innerText).toEqual(component.title);
   });
 
   it('should have display table', () => {
@@ -41,54 +70,16 @@ describe('ContainersComponent', () => {
     expect(appTable).toBeTruthy();
   });
 
-  it('should generate form', () => {
-    const form = fixture.debugElement.query(By.css('#containerForm')).nativeElement as HTMLFormElement;
-    const [name, rows, columns] = Array.from(form.querySelectorAll('input'));
-
-    expect(form).toBeTruthy();
-    expect(name.id).toEqual('name');
-    expect(rows.id).toEqual('rows');
-    expect(columns.id).toEqual('columns');
+  it('should have display fab add', () => {
+    const appTable = fixture.debugElement.query(By.css('app-fab'));
+    expect(appTable).toBeTruthy();
   });
 
-  it('should form be invalid when empty', () => {
-    expect(component.form.valid).toBeFalsy();
-  });
+  it('should emit click event when add button is clicked', () => {
+    const btnCell = fixture.debugElement.queryAll(By.css('app-fab button'))[0];
+    const spySelect = spyOn(component, 'addContainer').and.returnValue();
+    btnCell.triggerEventHandler('click', {});
 
-  it('should validity valid', () => {
-    const { name, rows, columns } = component.form.controls;
-    name.setValue('Box');
-    rows.setValue(12);
-    columns.setValue(12);
-
-    expect(name.errors).toBeFalsy();
-    expect(rows.errors).toBeFalsy();
-    expect(columns.errors).toBeFalsy();
-
-    name.setValue('');
-    rows.setValue(0);
-    columns.setValue(0);
-
-    expect(name.errors?.required).toBeTruthy();
-    expect(rows.errors?.min).toBeTruthy();
-    expect(columns.errors?.min).toBeTruthy();
-  });
-
-  it('should submitting a form emits a sample', () => {
-    expect(component.form.valid).toBeFalsy();
-    const { name, rows, columns } = component.form.controls;
-    name.setValue('Tray');
-    rows.setValue(12);
-    columns.setValue(12);
-    expect(component.form.valid).toBeTruthy();
-
-    component.handleFormSubmit();
-
-    const containers = storageService.getContainers().value;
-    const container = containers.get('tray');
-
-    expect(container?.name).toEqual('Tray');
-    expect(container?.rows).toEqual(12);
-    expect(container?.columns).toBe(12);
+    expect(spySelect).toHaveBeenCalled();
   });
 });

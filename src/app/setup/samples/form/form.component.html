@@ -1,0 +1,31 @@
+<app-modal title="{{title}}">
+  <div class="modal-body">
+
+    <form id="sampleForm" [formGroup]="form" (ngSubmit)="handleFormSubmit()">
+      <app-form-field [form]="form.get('number')" feedbackId="numberFeedback">
+        <label for="number">Number</label>
+        <input class="form-control" id="number" formControlName="number">
+      </app-form-field>
+
+      <app-form-field [form]="form.get('type')" feedbackId="typeFeedback">
+        <label for="type">Type</label>
+        <input class="form-control" id="type" formControlName="type" list="types-helper">
+      </app-form-field>
+
+      <app-form-field [form]="form.get('volume')" feedbackId="volumeFeedback">
+        <label for="volume">Volume</label>
+        <input class="form-control" id="volume" formControlName="volume">
+      </app-form-field>
+    </form>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+    <button type="submit" form="sampleForm" class="btn btn-success"
+            [disabled]="!form.valid" [attr.aria-disabled]="!form.valid">Add</button>
+  </div>
+</app-modal>
+
+<datalist id="types-helper">
+  <option *ngFor="let type of typesHelper" value="{{type}}">
+</datalist>

@@ -1,5 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
+import { APP_NAME } from '../../environments/environment';
 import Container from '../shared/models/Container';
 import Sample from '../shared/models/Sample';
 import Page from '../shared/types/Page';
@@ -15,21 +17,25 @@ import { BoardService } from './board/board.service';
 export class ProcessComponent implements OnDestroy {
   containerPageList: Page[] = [];
   freeSamples: Sample[] = [];
-  selectedSample?: Sample;
+  selectedPendingSample?: Sample;
   selectedCell?: SelectedCell;
 
   samplesSubscription: Subscription;
   containersSubscription: Subscription;
   selectedCellSubscription: Subscription;
 
-  constructor(private storageService: StorageService, private boardService: BoardService) {
+  constructor(private storageService: StorageService, private boardService: BoardService, private titleService: Title) {
+    titleService.setTitle(`Process | ${APP_NAME}`);
+
     this.containersSubscription = this.storageService
-      .getContainers()
+      .getContainersStream()
       .subscribe((containers) => this.fillContainerPageList(containers));
 
-    this.samplesSubscription = this.storageService.getSamples().subscribe((samples) => this.fillFreeSamples(samples));
+    this.samplesSubscription = this.storageService
+      .getSamplesStream()
+      .subscribe((samples) => this.fillFreeSamples(samples));
 
-    this.selectedCellSubscription = this.boardService.getSelectedCell().subscribe((selectedCell) => {
+    this.selectedCellSubscription = this.boardService.getSelectedCellStream().subscribe((selectedCell) => {
       this.selectedCell = selectedCell;
     });
   }
@@ -38,24 +44,24 @@ export class ProcessComponent implements OnDestroy {
     this.containersSubscription.unsubscribe();
     this.samplesSubscription.unsubscribe();
     this.selectedCellSubscription.unsubscribe();
-    this.selectedSample = undefined;
+    this.selectedPendingSample = undefined;
     this.selectedCell = undefined;
   }
 
   handleSelectSample(sample: Sample): void {
-    this.selectedSample = sample;
+    this.selectedPendingSample = sample;
   }
 
   handleCheckIn(): void {
     const { row, column } = this.selectedCell ?? {};
-    const sample = this.selectedSample;
+    const sample = this.selectedPendingSample;
     const container = this.boardService.selectedContainer;
 
     if (container && sample && row !== undefined && column !== undefined) {
       if (container.addSample(sample, row, column)) {
         this.storageService.updateStream();
         this.boardService.addSampleToSelectedCell(sample);
-        this.selectedSample = undefined;
+        this.selectedPendingSample = undefined;
       }
     }
   }
@@ -72,7 +78,11 @@ export class ProcessComponent implements OnDestroy {
     }
   }
 
-  private fillContainerPageList(containers: Map<string, Container>) {
+  isDisableCheckInBtn(): boolean {
+    return !(<boolean>(this.selectedPendingSample && this.selectedCell && !this.selectedCell.sample));
+  }
+
+  private fillContainerPageList(containers: Map<string, Container>): void {
     this.containerPageList = [];
     containers.forEach((container, key) => {
       this.containerPageList.push({ path: key, title: container.name });

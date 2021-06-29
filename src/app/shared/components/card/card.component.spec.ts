@@ -22,7 +22,7 @@ describe('CardComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have title', () => {
+  it('should render title', () => {
     component.title = 'test title';
     fixture.detectChanges();
     const header = fixture.debugElement.query(By.css('.card-header')).nativeElement as HTMLDivElement;

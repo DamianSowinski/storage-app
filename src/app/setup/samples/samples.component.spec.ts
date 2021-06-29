@@ -1,27 +1,47 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
+import { By, Title } from '@angular/platform-browser';
+import { RouterTestingModule } from '@angular/router/testing';
+import { BehaviorSubject } from 'rxjs';
+import { APP_NAME } from '../../../environments/environment';
+import { FabComponent } from '../../shared/components/fab/fab.component';
+import { TableComponent } from '../../shared/components/table/table.component';
+import Sample from '../../shared/models/Sample';
 import { StorageService } from '../../storage.service';
 import { SamplesComponent } from './samples.component';
 
 describe('SamplesComponent', () => {
   let component: SamplesComponent;
   let fixture: ComponentFixture<SamplesComponent>;
-  let storageService: StorageService;
+  let titleService: Title;
+  let storageService: jasmine.SpyObj<StorageService>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SamplesComponent],
-      imports: [ReactiveFormsModule, FormsModule],
-      providers: [StorageService],
+      declarations: [SamplesComponent, TableComponent, FabComponent],
+      imports: [RouterTestingModule],
+      providers: [
+        Title,
+        {
+          provide: StorageService,
+          useValue: jasmine.createSpyObj('StorageService', ['getSamplesStream']),
+        },
+      ],
     }).compileComponents();
 
-    storageService = TestBed.inject(StorageService);
+    titleService = TestBed.inject(Title);
+    storageService = TestBed.inject(StorageService) as jasmine.SpyObj<StorageService>;
   });
 
   beforeEach(() => {
+    const samples = new Map<string, Sample>();
+    samples.set('1', new Sample('1', 'a', 'aa'));
+    samples.set('2', new Sample('2', 'b', 'bb'));
+
+    storageService.getSamplesStream.and.returnValue(new BehaviorSubject<Map<string, Sample>>(new Map(samples)));
+
     fixture = TestBed.createComponent(SamplesComponent);
     component = fixture.componentInstance;
+    component.tableColumns = ['Number', 'Type', 'Volume'];
     fixture.detectChanges();
   });
 
@@ -29,11 +49,19 @@ describe('SamplesComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have display section title', () => {
-    component.title = 'Samples';
-    fixture.detectChanges();
-    const title = fixture.debugElement.query(By.css('h3')).nativeElement as HTMLHeadingElement;
-    expect(title.innerText).toEqual('Samples');
+  it('should set initial values', () => {
+    expect(component.tableColumns).toHaveSize(3);
+    expect(component.tableData).toHaveSize(2);
+  });
+
+  it('should set page title', () => {
+    expect(titleService.getTitle()).toEqual(`${component.title} | ${APP_NAME}`);
+  });
+
+  it('should render section title', () => {
+    const titleHTML = fixture.debugElement.query(By.css('h3')).nativeElement as HTMLHeadingElement;
+
+    expect(titleHTML.innerText).toEqual(component.title);
   });
 
   it('should have display table', () => {
@@ -41,79 +69,16 @@ describe('SamplesComponent', () => {
     expect(appTable).toBeTruthy();
   });
 
-  it('should generate form', () => {
-    const form = fixture.debugElement.query(By.css('#sampleForm')).nativeElement as HTMLFormElement;
-    const [number, type, volume] = Array.from(form.querySelectorAll('input'));
-
-    expect(form).toBeTruthy();
-    expect(number.id).toEqual('number');
-    expect(type.id).toEqual('type');
-    expect(volume.id).toEqual('volume');
+  it('should have display fab add', () => {
+    const appTable = fixture.debugElement.query(By.css('app-fab'));
+    expect(appTable).toBeTruthy();
   });
 
-  it('should form be invalid when empty', () => {
-    expect(component.form.valid).toBeFalsy();
-  });
+  it('should emit click event when add button is clicked', () => {
+    const btnCell = fixture.debugElement.queryAll(By.css('app-fab button'))[0];
+    const spySelect = spyOn(component, 'addSample').and.returnValue();
+    btnCell.triggerEventHandler('click', {});
 
-  it('should validity valid', () => {
-    const { number, type, volume } = component.form.controls;
-    number.setValue('100');
-    type.setValue('Blood');
-    volume.setValue('10ml');
-
-    expect(number.errors).toBeFalsy();
-    expect(type.errors).toBeFalsy();
-    expect(volume.errors).toBeFalsy();
-
-    number.setValue('');
-    type.setValue('');
-    volume.setValue('1');
-
-    expect(number.errors?.required).toBeTruthy();
-    expect(type.errors?.required).toBeTruthy();
-    expect(volume.errors?.pattern).toBeTruthy();
-
-    // regex check
-    volume.setValue('1l');
-    expect(volume.errors?.pattern).toBeFalsy();
-    volume.setValue('1ml');
-    expect(volume.errors?.pattern).toBeFalsy();
-    volume.setValue('1µl');
-    expect(volume.errors?.pattern).toBeFalsy();
-    volume.setValue('1nl');
-    expect(volume.errors?.pattern).toBeFalsy();
-    volume.setValue('1pl');
-    expect(volume.errors?.pattern).toBeFalsy();
-    volume.setValue('0.1ml');
-    expect(volume.errors?.pattern).toBeFalsy();
-    volume.setValue('0,1ml');
-    expect(volume.errors?.pattern).toBeFalsy();
-
-    volume.setValue('ml');
-    expect(volume.errors?.pattern).toBeTruthy();
-    volume.setValue(',ml');
-    expect(volume.errors?.pattern).toBeTruthy();
-    volume.setValue('1,ml');
-    expect(volume.errors?.pattern).toBeTruthy();
-    volume.setValue(',1ml');
-    expect(volume.errors?.pattern).toBeTruthy();
-  });
-
-  it('should submitting a form emits a sample', () => {
-    expect(component.form.valid).toBeFalsy();
-    const { number, type, volume } = component.form.controls;
-    number.setValue('100');
-    type.setValue('Blood');
-    volume.setValue('10ml');
-    expect(component.form.valid).toBeTruthy();
-
-    component.handleFormSubmit();
-
-    const samples = storageService.getSamples().value;
-    const sample = samples.get('100');
-
-    expect(sample?.number).toEqual('100');
-    expect(sample?.type).toEqual('Blood');
-    expect(sample?.volume).toBe('10ml');
+    expect(spySelect).toHaveBeenCalled();
   });
 });

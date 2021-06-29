@@ -8,7 +8,7 @@ import { AbstractControl } from '@angular/forms';
 })
 export class FormFieldComponent {
   @Input() form: AbstractControl | null = null;
-  @Input() feedbackId: string | null = null;
+  @Input() feedbackId?: string;
 
   errorMessage = '';
 
@@ -29,23 +29,17 @@ export class FormFieldComponent {
           break;
 
         case form.hasError('minlength'): {
-          const { minLength } = form.errors;
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/restrict-template-expressions
-          this.errorMessage = `Please use at least ${minLength.requiredLength} characters`;
-          break;
-        }
-
-        case form.hasError('pattern'): {
-          const { pattern } = form.errors;
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/restrict-template-expressions
-          this.errorMessage = pattern.message;
+          const requiredLength = form.getError('minlength').requiredLength as number;
+          this.errorMessage = `Please use at least ${requiredLength} characters`;
           break;
         }
 
         case form.hasError('unique'): {
-          const { unique } = form.errors;
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/restrict-template-expressions
-          this.errorMessage = unique.message;
+          this.errorMessage = form.getError('unique').message;
+          break;
+        }
+        case form.hasError('pattern'): {
+          this.errorMessage = form.getError('pattern').message;
           break;
         }
       }
